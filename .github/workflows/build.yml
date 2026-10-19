@@ -1,0 +1,154 @@
+name: Build and verify
+
+# Manual runs only: no CI runs until the repository is public. The push
+# and pull-request triggers are restored at release, when the repository is made
+# public, by replacing the `workflow_dispatch:` line below with
+#
+#   push:
+#     branches: [main]
+#   pull_request:
+#     branches: [main]
+#   workflow_dispatch:
+#
+# Run this workflow first: the "Comparators" workflow starts when it succeeds
+# and restores the build cache that this run saves.
+"on":
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# Only superseded pull-request runs are cancelled. A push to main never cancels
+# a build in progress: its saved progress is what the next run resumes from.
+concurrency:
+  group: build-${{ github.ref }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+
+jobs:
+  build:
+    name: Build and axiom audit
+    runs-on: ubuntu-24.04
+    # GitHub's hard maximum for a hosted job. A first run on an empty cache
+    # compiles the AVAnomalousDiffusion dependency and the whole library from
+    # source: about 9.6 CPU-hours (about 0.9 for the dependency and 8.7 for
+    # this library), estimated at 4 to 6 hours on 4 vCPUs. It may need one
+    # re-run to finish; each attempt saves its progress.
+    timeout-minutes: 360
+    defaults:
+      run:
+        shell: bash
+    steps:
+      - name: Checkout
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          persist-credentials: false
+
+      # The build needs more disk than a hosted runner has free at start. Only
+      # remove preinstalled, unused SDKs on disposable hosted runners, and fail
+      # at once if less than 20 GiB is available.
+      - name: Free runner disk space
+        run: |
+          set -Eeuo pipefail
+          # Only remove preinstalled, unused SDKs on disposable hosted runners.
+          if [[ "${RUNNER_ENVIRONMENT:-}" == github-hosted ]]; then
+            sudo rm -rf /usr/share/dotnet /usr/local/lib/android /opt/ghc /opt/hostedtoolcache/CodeQL
+            sudo docker image prune --all --force > /dev/null || true
+          fi
+          df -h .
+          available_kib="$(df -Pk . | awk 'NR==2 {print $4}')"
+          test "$available_kib" -ge 20971520
+
+      # Lake runs four compilations at once, each up to about 5 GB, on a 16 GB
+      # runner. A swap file turns an out-of-memory kill into a slow step. It
+      # goes on /mnt, which has its own disk; without 20 GiB free there it is
+      # skipped, never taken from the build's disk.
+      - name: Add swap
+        run: |
+          set -Eeuo pipefail
+          free_kib="$( (df -Pk /mnt 2>/dev/null || true) | awk 'NR==2 {print $4}')"
+          free_kib="${free_kib:-0}"
+          if [[ "${RUNNER_ENVIRONMENT:-}" == github-hosted && "$free_kib" -ge 20971520 ]]; then
+            sudo fallocate -l 16G /mnt/ci-swap
+            sudo chmod 600 /mnt/ci-swap
+            sudo mkswap /mnt/ci-swap
+            sudo swapon /mnt/ci-swap
+          else
+            echo "No swap file added (/mnt has $((free_kib / 1048576)) GiB free)."
+          fi
+          free -h
+
+      - name: Check Lean source requirements
+        run: python3 scripts/check-lean-sources.py
+
+      - name: Check metadata and documentation
+        run: python3 scripts/check-metadata.py
+
+      # Install the toolchain from `lean-toolchain` and fetch the Mathlib cache
+      # (`lake exe cache get`). The action's own cache is off: it saves only
+      # after a successful build and uses one key for every workflow. The cache
+      # steps below save even when the build is interrupted.
+      - name: Set up Lean and Mathlib cache
+        uses: leanprover/lean-action@38fbc41a8c28c4cbaec22d7f7de508ec2e7c0dd9 # v1.5.0
+        with:
+          build: false
+          use-mathlib-cache: true
+          use-github-cache: false
+
+      # The key is unique to this attempt of this run, so it never matches and
+      # the most recent entry for the same commit is restored through
+      # `restore-keys` (this run's earlier attempt, if any), then the most
+      # recent entry of any commit. A re-run therefore resumes where the
+      # previous attempt stopped, and its own progress is saved under a new key.
+      # The Comparators workflow restores this run's entry by its exact key.
+      - name: Restore project and dependency build artifacts
+        id: cache-restore
+        uses: actions/cache/restore@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .lake/build
+            .lake/packages/AVAnomalousDiffusion/.lake/build
+          key: lake-build-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}
+          restore-keys: |
+            lake-build-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}-
+            lake-build-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-
+
+      # No `sorry` and no linter warning in the library (AVRegularity/), the
+      # Solution or the Challenge, except the Challenge's intentional `sorry`
+      # per theorem, which Lean reports as a warning: only those warnings,
+      # and only from AVRegularityChallenge.lean, are exempt.
+      #
+      # The step limit leaves the rest of the 360 minutes for the checkout,
+      # the toolchain and Mathlib cache (about 10 minutes), the axiom audit,
+      # and saving the cache (3 to 8 minutes), so that a first build that runs
+      # out of time still reaches the save step.
+      - name: Build
+        timeout-minutes: 310
+        run: |
+          set -o pipefail
+          lake build 2>&1 | tee build.log
+          # AVRegularity, AVRegularityChallenge and AVRegularitySolution all
+          # begin with "AVRegularity".
+          if grep -E '^warning: (\./)?AVRegularity' build.log \
+               | grep -vE '^warning: (\./)?AVRegularityChallenge\.lean:[0-9]+:[0-9]+: declaration uses .sorry.$'; then
+            echo "The build reported a warning other than the Challenge's intentional sorry."
+            exit 1
+          fi
+
+      # Elaborate scripts/Axioms.lean and check its `#print axioms` output:
+      # every listed theorem is reported and depends only on propext,
+      # Classical.choice and Quot.sound.
+      - name: Axiom audit
+        run: python3 scripts/check-axioms.py --log "$RUNNER_TEMP/axioms.log"
+
+      # Saved on success, failure and timeout alike, except for pull requests
+      # (their entries would crowd out main's in the 10 GB cache quota).
+      # Always saved, even when nothing was rebuilt: the Comparators workflow
+      # needs this run's exact entry.
+      - name: Save project and dependency build artifacts
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/cache/save@55cc8345863c7cc4c66a329aec7e433d2d1c52a9 # v6.1.0
+        with:
+          path: |
+            .lake/build
+            .lake/packages/AVAnomalousDiffusion/.lake/build
+          key: lake-build-${{ hashFiles('lean-toolchain', 'lake-manifest.json') }}-${{ github.sha }}-${{ github.run_id }}-${{ github.run_attempt }}

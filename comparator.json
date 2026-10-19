@@ -1,0 +1,20 @@
+{
+  "challenge_module": "AVRegularityChallenge",
+  "solution_module": "AVRegularitySolution",
+  "theorem_names": [
+    "AVRegularityChallenge.interior_regularity",
+    "AVRegularityChallenge.uniform_anomalous_dissipation",
+    "AVRegularityChallenge.interior_regularity_and_dissipation",
+    "AVRegularityChallenge.exists_isFastProfile",
+    "AVRegularityChallenge.existsUnique_streamFlow",
+    "AVRegularityChallenge.exists_isOCStreamSeq",
+    "AVRegularityChallenge.interior_regularity_construction",
+    "AVRegularityChallenge.uniform_anomalous_dissipation_construction",
+    "AVRegularityChallenge.local_interior_regularity",
+    "AVRegularityChallenge.vanishing_diffusivity_limits",
+    "AVRegularityChallenge.vanishing_diffusivity_limits_local"
+  ],
+  "definition_names": [],
+  "permitted_axioms": ["propext", "Quot.sound", "Classical.choice"],
+  "enable_nanoda": true
+}

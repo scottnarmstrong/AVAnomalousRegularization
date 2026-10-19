@@ -1,0 +1,80 @@
+cff-version: 1.2.0
+message: >-
+  If you use this formalization, please cite it as below, together with the
+  paper it formalizes. S. Armstrong was supported by NSF grant DMS-2350340 and
+  by the European Research Council (ERC) under the European Union's Horizon
+  Europe research and innovation programme, grant agreement number 101200828.
+  V. Vicol was supported by the Collaborative NSF grant DMS-2307681 and by a
+  Simons Investigator Award.
+title: "AVAnomalousRegularization: a Lean 4 formalization of anomalous regularization of passive scalars up to the Obukhov–Corrsin exponent"
+version: "1.0"
+date-released: 2026-11-04
+abstract: >-
+  A machine-checked Lean 4 / Mathlib formalization of S. Armstrong and V.
+  Vicol, "Anomalous regularization of passive scalars up to the
+  Obukhov–Corrsin exponent". For the advection-diffusion equation on the
+  two-dimensional torus with a divergence-free, alpha-Hölder velocity field
+  constructed as in Armstrong and Vicol, "Anomalous diffusion by fractal
+  homogenization", alpha < 1/3, it proves that, for every s below the
+  Obukhov–Corrsin exponent (1 - alpha)/2 and with the velocity field depending
+  on s, at positive times the solutions are bounded in C^{0,s} by a constant
+  times the L^2 norm of the initial datum, uniformly in the diffusivity in a
+  union of bands accumulating at zero (Theorem A); that every
+  solution dissipates a fixed fraction of its variance in unit time, with
+  constants independent of the diffusivity, the L^2 datum and the initial time
+  (Theorem B); a local form of Theorem A in space-time tubes that follow the
+  flow of a coarse velocity field (Theorem C); and the vanishing-diffusivity limits (Corollary D). The
+  proofs use only the standard axioms.
+type: software
+authors:
+  - family-names: Armstrong
+    given-names: Scott
+    affiliation: "CNRS & Laboratoire Jacques-Louis Lions, Sorbonne Université and Courant Institute School of Mathematics, Computing, and Data Science, New York University"
+  - family-names: Vicol
+    given-names: Vlad
+    affiliation: "Courant Institute School of Mathematics, Computing, and Data Science, New York University"
+keywords:
+  - Lean
+  - mathlib
+  - formal verification
+  - advection-diffusion equation
+  - passive scalars
+  - anomalous dissipation
+  - Obukhov–Corrsin exponent
+  - homogenization
+license: Apache-2.0
+repository-code: "https://github.com/scottnarmstrong/AVAnomalousRegularization"
+references:
+  - type: article
+    title: "Anomalous regularization of passive scalars up to the Obukhov–Corrsin exponent"
+    authors:
+      - family-names: Armstrong
+        given-names: Scott
+      - family-names: Vicol
+        given-names: Vlad
+    year: 2026
+    notes: "Included in this repository as doc/paper.pdf, for reference. The paper is © the authors and is not covered by the Apache-2.0 license of the code."
+  - type: article
+    title: "Anomalous diffusion by fractal homogenization"
+    authors:
+      - family-names: Armstrong
+        given-names: Scott
+      - family-names: Vicol
+        given-names: Vlad
+    journal: "Annals of PDE"
+    volume: 11
+    issue: 1
+    year: 2025
+    doi: "10.1007/s40818-024-00189-6"
+    identifiers:
+      - type: other
+        value: "arXiv:2305.05048"
+  - type: software
+    title: "AVAnomalousDiffusion: a Lean 4 formalization of anomalous diffusion by fractal homogenization"
+    authors:
+      - family-names: Armstrong
+        given-names: Scott
+      - family-names: Vicol
+        given-names: Vlad
+    repository-code: "https://github.com/scottnarmstrong/AVAnomalousDiffusion"
+    commit: "d4dbc7b11fbf350667013d5ac98a3686f44093f5"

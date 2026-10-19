@@ -1,0 +1,346 @@
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mathlib-initiative/formalization.yaml/main/schema/formalization.schema.json
+version: "v0.4"
+
+project:
+  name: "Anomalous regularization of passive scalars up to the Obukhov–Corrsin exponent"
+  description: >-
+    A Lean 4 / Mathlib formalization of S. Armstrong and V. Vicol, "Anomalous
+    regularization of passive scalars up to the Obukhov–Corrsin exponent"
+    (2026, included as doc/paper.pdf). The velocity field b is constructed as in
+    Armstrong and Vicol, "Anomalous diffusion by fractal homogenization": a
+    bounded, Z^2-periodic, divergence-free field on R x T^2, built from shear
+    flows alternating in direction at infinitely many scales, Hölder
+    continuous in space and time with exponent alpha < 1/3, with its scale
+    separation parameter q taken close to 1 depending on s. For the advection-diffusion
+    equation d_t theta + b . grad theta = kappa Laplacian theta on T^2 and
+    every s < (1 - alpha)/2, with b built for that s, it proves: the solutions are bounded at positive
+    times in C^{0,s}(T^2) by C times the L^2 norm of the initial datum,
+    uniformly in kappa in a union of bands accumulating at zero (Theorem A);
+    every solution dissipates a fixed fraction of its variance in unit time,
+    and the variance decays exponentially, with constants independent of
+    kappa in the bands, of the L^2 datum and of the initial time (Theorem B);
+    the local form of Theorem A in space-time tubes that follow the flow of
+    the coarse velocity fields, without boundary conditions (Theorem C); and
+    the compactness of the solutions as kappa tends to zero in the bands,
+    with limits that solve the transport equation and satisfy the bounds of
+    Theorems A and C (Corollary D). It also contains every statement of
+    Part I of the paper.
+  authors:
+    - "Scott Armstrong"
+    - "Vlad Vicol"
+  responsible_maintainers:
+    - "Scott Armstrong"
+    - "Vlad Vicol"
+  affiliations:
+    - "Scott Armstrong: CNRS & Laboratoire Jacques-Louis Lions, Sorbonne Université and Courant Institute School of Mathematics, Computing, and Data Science, New York University"
+    - "Vlad Vicol: Courant Institute School of Mathematics, Computing, and Data Science, New York University"
+  license: "Apache-2.0"
+  funding:
+    - "S. Armstrong was supported by NSF grant DMS-2350340 and by the European Research Council (ERC) under the European Union's Horizon Europe research and innovation programme, grant agreement number 101200828."
+    - "V. Vicol was supported by the Collaborative NSF grant DMS-2307681 and by a Simons Investigator Award."
+
+classification:
+  arxiv: ["math.AP"]
+  msc2020: ["35B65", "35K15", "35B27", "76F25", "35Q35"]
+
+sources:
+  - title: "Anomalous regularization of passive scalars up to the Obukhov–Corrsin exponent"
+    authors:
+      - "Scott Armstrong"
+      - "Vlad Vicol"
+    type: "article"
+    location: "doc/paper.pdf (164 pp.): Theorems A, B and C, Corollary D, and every numbered statement and display"
+    relationship: "formalizes"
+    note: >-
+      The paper was written after the formalization and follows its
+      statements; doc/correspondence.md maps every
+      numbered statement and display of the paper to the Lean declarations
+      that prove it, or says why none is needed (figures, attributions,
+      heuristics). Theorems A, B and C, Corollary D and every statement of
+      Part I are formal statements; the propositions and lemmas of Part II
+      follow from formal statements, directly or by elementary steps, or are
+      proved, where they are used, inside its formal proofs. Some
+      results are stated in the paper in a weaker form than their formal
+      versions (for example, where the paper bounds a norm in L^infinity in
+      time, the formal statement gives the bound at every time).
+    license: "© the authors, all rights reserved; included as doc/paper.pdf for reference, not covered by the Apache-2.0 license of the code"
+    author_endorsement: "participated"
+
+related_formalizations:
+  - id: "https://github.com/scottnarmstrong/AVAnomalousDiffusion"
+    relationship: "builds-on"
+    note: >-
+      The Lean formalization of Armstrong and Vicol, "Anomalous diffusion by
+      fractal homogenization" (Annals of PDE 11 (2025), arXiv:2305.05048),
+      required at commit d4dbc7b11fbf350667013d5ac98a3686f44093f5 (see
+      lake-manifest.json). It supplies the ambient space and Sobolev notions
+      (Vec, MemL2On, weak gradients, periodic H^1, taken there from the
+      CoarseGraining formalization of Armstrong and Kuusi), the conventions
+      for functions on the torus, stream functions and their flows, the
+      existence and uniqueness of weak solutions, and parts of the analysis
+      of that paper (flows and their derivatives, the Faà di Bruno formula,
+      cell problems and correctors of the shear pulses, energy and Galerkin
+      methods on the torus). Its velocity field fixes the parameter q in
+      terms of alpha; the velocity field of the present paper, with q free,
+      is constructed in this repository.
+
+status:
+  scope: >-
+    Complete for the main results of the paper. Theorem A (interior
+    regularity) and Theorem B (uniform anomalous dissipation) are stated for
+    the velocity field of the paper, for every alpha in (0, 1/3), every s in
+    (0, (1 - alpha)/2), every admissible q and cutoff function, and every
+    integer Lambda at least a threshold Lambda_0, and also in an existential
+    form (some velocity field with the stated regularity and some disjoint
+    bands accumulating at zero), separately and jointly for one velocity
+    field. Theorem C (local interior regularity in tubes) and Corollary D
+    (vanishing-diffusivity limits, global and local) are stated for the
+    velocity field of the paper. Theorems A and B also assert the existence
+    of the weak solutions, and the construction is shown to exist for every
+    integer Lambda >= 128. Every statement of Part I of the paper is a
+    formal statement.
+  sorry_count: 0
+  sorry_in_definitions: 0
+  axioms: ["propext", "Classical.choice", "Quot.sound"]
+  main_results:
+    - declaration: "AVRegularity.interior_regularity_construction"
+      file: "AVRegularity/Statements/Main/InteriorRegularityConstruction.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularity.interior_regularity"
+      file: "AVRegularity/Statements/Main/InteriorRegularity.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularity.uniform_anomalous_dissipation_construction"
+      file: "AVRegularity/Statements/Main/UniformAnomalousDissipationConstruction.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularity.uniform_anomalous_dissipation"
+      file: "AVRegularity/Statements/Main/UniformAnomalousDissipation.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularity.interior_regularity_and_dissipation"
+      file: "AVRegularity/Statements/Main/InteriorRegularityAndDissipation.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularity.local_interior_regularity"
+      file: "AVRegularity/Statements/Main/LocalInteriorRegularity.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularity.vanishing_diffusivity_limits"
+      file: "AVRegularity/Statements/Main/VanishingDiffusivityLimits.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularity.vanishing_diffusivity_limits_local"
+      file: "AVRegularity/Statements/Main/VanishingDiffusivityLimitsLocal.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularityChallenge.interior_regularity"
+      file: "AVRegularitySolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularityChallenge.uniform_anomalous_dissipation"
+      file: "AVRegularitySolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularityChallenge.interior_regularity_and_dissipation"
+      file: "AVRegularitySolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularityChallenge.exists_isFastProfile"
+      file: "AVRegularitySolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularityChallenge.existsUnique_streamFlow"
+      file: "AVRegularitySolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularityChallenge.exists_isOCStreamSeq"
+      file: "AVRegularitySolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularityChallenge.interior_regularity_construction"
+      file: "AVRegularitySolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularityChallenge.uniform_anomalous_dissipation_construction"
+      file: "AVRegularitySolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularityChallenge.local_interior_regularity"
+      file: "AVRegularitySolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularityChallenge.vanishing_diffusivity_limits"
+      file: "AVRegularitySolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+    - declaration: "AVRegularityChallenge.vanishing_diffusivity_limits_local"
+      file: "AVRegularitySolution.lean"
+      sorry_count: 0
+      axioms: ["propext", "Classical.choice", "Quot.sound"]
+      comparator_config: "comparator.json"
+      literature_dependencies: []
+
+automation:
+  methods:
+    - method: "agent"
+      models:
+        - "claude-opus-5-5"
+        - "claude-sonnet-5-5"
+        - "gpt-6.1-sol"
+        - "gpt-6-luna"
+      framework: >-
+        Claude Code (Claude Opus 5.5, Claude Sonnet 5.5) and Codex (GPT-6.1
+        Sol, GPT-6 Luna), directed by the authors.
+      tool_setup: >-
+        Lean 4 and Mathlib v4.35.0-rc2, on top of the Lean formalization of
+        "Anomalous diffusion by fractal homogenization". The exact Lean
+        statements of the main results and of the definitions they use were
+        written first, reviewed against the source by an independent model
+        and by the authors, and kept fixed while their proofs were developed.
+        Verification uses full builds, axiom checks, and the Mathlib-only
+        comparator challenge with Lean's comparator and the independent kernel
+        checkers bundled with the toolchain.
+      cost:
+        wall_time: "about two weeks of Lean development (2026-10-04 to 2026-10-17)"
+        spend_usd: "not separately tracked (subscription-based usage)"
+        hardware: "one shared 16-core / 124 GB RAM Linux machine"
+      prompting_notes: >-
+        The authors wrote a detailed outline of the proof. From it, the
+        authors together with Claude Opus 5.5 and GPT-6.1 Sol first produced a
+        long, unpolished manuscript (612 pages) in which every detail of the
+        proof was filled in, and this manuscript was then formalized. The
+        authors determined the statements of the main results and directed
+        the development. Claude
+        Opus 5.5 coordinated the work throughout; the Lean code was written by
+        Claude Opus 5.5 and Claude Sonnet 5.5, with some of it written by
+        GPT-6.1 Sol and GPT-6 Luna.
+  spend_usd: "not separately tracked (subscription-based usage)"
+  notes: >-
+    All Lean code was written by the listed models under the direction of the
+    authors. Every proof is checked by the Lean kernel; the library contains
+    no sorry and no custom axiom. The paper was drafted by AI agents under the
+    direction of the authors, following the Lean, and then checked by the
+    authors, who rewrote parts of it themselves and directed AI agents in
+    rewriting the rest, as its introduction states. Claude Sonnet 5.5 and
+    GPT-6-Astra checked the paper's statements against the Lean statements.
+
+fidelity:
+  divergences: >-
+    The Lean statements of the main results are those of the paper, up to
+    the following differences of form. Functions on T^2 are Z^2-periodic
+    functions on R^2, and integrals over T^2 are integrals over the open unit
+    square. Where the paper bounds a norm in L^infinity in time, the Lean
+    statement gives the bound at every time, for a periodic representative
+    that is jointly continuous in time and space. Theorem B's decay bound is
+    stated squared, for t > a. The velocity field of the construction is
+    given as the pointwise limit of the velocity fields of the stream
+    functions defined by the recursion of Section 2. Theorem C is stated for
+    every tube duration 8T with T comparable to h_{m+1} and 8 T a_m <= c_*,
+    which includes the paper's T = h_{m+1}, and bounds the solution in
+    physical variables on the moving disc, which gives the paper's bound in
+    the Lagrangian variables with 2C in place of C. In Corollary D the
+    sequence of diffusivities is indexed by the natural numbers, the
+    subsequence is given by a strictly increasing map, and the convergence is
+    that of continuous versions of the solutions. The existential forms of
+    Theorems A and B are consequences of the forms for the construction.
+
+review:
+  status: "author-verified"
+  reviewers:
+    - "Scott Armstrong"
+    - "Vlad Vicol"
+  notes: >-
+    Lean checks each proof against its formal statement. The authors reviewed
+    that the statements of the main results are the intended theorems, and
+    each was compared with the source by an independent model review before
+    its proof was developed. The comparator declarations are checked
+    mechanically. This is not external peer review.
+
+alignment:
+  namespace: "AVRegularity"
+  correspondence_table: "doc/correspondence.md"
+  statements:
+    - source: "Theorem A (interior regularity), for the velocity field of Section 2"
+      lean: "AVRegularity.interior_regularity_construction"
+      module: "AVRegularity.Statements.Main.InteriorRegularityConstruction"
+      status: "proved"
+      note: "The bound of (3.3) at every time of [a + t0, a + T], with existence of the weak solutions."
+    - source: "Theorem A, existential form"
+      lean: "AVRegularity.interior_regularity"
+      module: "AVRegularity.Statements.Main.InteriorRegularity"
+      status: "proved"
+      note: "Some alpha-Hölder, periodic, divergence-free velocity field and some disjoint bands accumulating at zero."
+    - source: "Theorem B (uniform anomalous dissipation), for the velocity field of Section 2"
+      lean: "AVRegularity.uniform_anomalous_dissipation_construction"
+      module: "AVRegularity.Statements.Main.UniformAnomalousDissipationConstruction"
+      status: "proved"
+      note: "(3.5) on [a, a + 1]; (3.6) squared, for t > a."
+    - source: "Theorem B, existential form"
+      lean: "AVRegularity.uniform_anomalous_dissipation"
+      module: "AVRegularity.Statements.Main.UniformAnomalousDissipation"
+      status: "proved"
+    - source: "Theorems A and B for one velocity field and one set of bands, existential form"
+      lean: "AVRegularity.interior_regularity_and_dissipation"
+      module: "AVRegularity.Statements.Main.InteriorRegularityAndDissipation"
+      status: "proved"
+    - source: "Theorem C (local interior regularity)"
+      lean: "AVRegularity.local_interior_regularity"
+      module: "AVRegularity.Statements.Main.LocalInteriorRegularity"
+      status: "proved"
+      note: "With n = m + 2, T = h_{m+1}, R = r_tube, varrho = r_obs / r_tube, vartheta = 8 - t0 / h_{m+1}; the bound is stated on the moving disc in physical variables."
+    - source: "Corollary D(a) (vanishing-diffusivity limits)"
+      lean: "AVRegularity.vanishing_diffusivity_limits"
+      module: "AVRegularity.Statements.Main.VanishingDiffusivityLimits"
+      status: "proved"
+    - source: "Corollary D(b) (vanishing-diffusivity limits in the tubes of Theorem C)"
+      lean: "AVRegularity.vanishing_diffusivity_limits_local"
+      module: "AVRegularity.Statements.Main.VanishingDiffusivityLimitsLocal"
+      status: "proved"
+
+acknowledgements: >-
+  S. Armstrong was supported by NSF grant DMS-2350340 and by the European
+  Research Council (ERC) under the European Union's Horizon Europe research
+  and innovation programme, grant agreement number 101200828. V. Vicol was
+  supported by the Collaborative NSF grant DMS-2307681 and by a Simons
+  Investigator Award. Built on Lean 4 and Mathlib, and on the Lean
+  formalization of "Anomalous diffusion by fractal homogenization", whose
+  Sobolev notions are taken from the CoarseGraining formalization of Scott
+  Armstrong and Tuomo Kuusi.
