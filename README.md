@@ -11,7 +11,7 @@ A complete, machine-checked proof of the results of
 The paper studies the advection–diffusion equation
 
 ```math
-\partial_t\theta+\mathbf b\cdot\nabla\theta-\kappa\Delta\theta=0 \quad\text{in } (a,\infty)\times\mathbb T^2,\qquad \theta(a,\cdot)=f \quad\text{on } \mathbb T^2,
+\partial_t\theta+\mathbf b\cdot\nabla\theta-\kappa\Delta\theta=0 \quad\text{in } (t_{\mathsf{in}},\infty)\times\mathbb T^2,\qquad \theta(t_{\mathsf{in}},\cdot)=\theta_{\mathsf{in}} \quad\text{on } \mathbb T^2,
 ```
 
 on the torus $\mathbb T^2=\mathbb R^2/\mathbb Z^2$, where $\mathbf b$ is a velocity field constructed as in
@@ -97,10 +97,10 @@ $\vert x-y\vert_{\mathbb T^2}$ the distance on the torus, (3.1) is
 \Vert g\Vert_{C^{0,s}(\mathbb T^2)}:=\sup_{\mathbb T^2}\vert g\vert+\sup_{x\ne y}\frac{\vert g(x)-g(y)\vert}{\vert x-y\vert_{\mathbb T^2}^s}.
 ```
 
-A *weak solution* on $(a,a+T)$ of the initial-value problem is a function
-$\theta\in L^\infty((a,a+T);L^2(\mathbb T^2))$ with $\nabla\theta\in L^2((a,a+T)\times\mathbb T^2)$,
+A *weak solution* on $(t_{\mathsf{in}},t_{\mathsf{in}}+T)$ of the initial-value problem is a function
+$\theta\in L^\infty((t_{\mathsf{in}},t_{\mathsf{in}}+T);L^2(\mathbb T^2))$ with $\nabla\theta\in L^2((t_{\mathsf{in}},t_{\mathsf{in}}+T)\times\mathbb T^2)$,
 weakly continuous in $L^2(\mathbb T^2)$, which solves the equation in the sense of distributions
-and takes the initial value; a weak solution on $(a,\infty)$ is a weak solution on $(a,a+T)$ for
+and takes the initial value; a weak solution on $(t_{\mathsf{in}},\infty)$ is a weak solution on $(t_{\mathsf{in}},t_{\mathsf{in}}+T)$ for
 every $T\gt0$.
 
 ## The main results
@@ -117,16 +117,16 @@ construction. The blocks below are the exact Lean statements.
 > satisfy (2.2). There exists $\Lambda_0(\alpha,s,q,\zeta)\ge128$ such that, for every integer
 > $\Lambda\ge\Lambda_0$, the velocity field $\mathbf b$ has the following property. For every
 > $0\lt t_0\lt T$ there exists $C(\alpha,s,q,\zeta,\Lambda,t_0,T)\lt\infty$ such that, for every
-> $a\in\mathbb R$, $\kappa\in\mathcal K$ and $f\in L^2(\mathbb T^2)$, every weak solution $\theta$ of
+> $t_{\mathsf{in}}\in\mathbb R$, $\kappa\in\mathcal K$ and $\theta_{\mathsf{in}}\in L^2(\mathbb T^2)$, every weak solution $\theta$ of
 >
 > ```math
-> \partial_t\theta+\mathbf b\cdot\nabla\theta-\kappa\Delta\theta=0 \quad\text{in } (a,a+T)\times\mathbb T^2,\qquad \theta(a,\cdot)=f \quad\text{on } \mathbb T^2,
+> \partial_t\theta+\mathbf b\cdot\nabla\theta-\kappa\Delta\theta=0 \quad\text{in } (t_{\mathsf{in}},t_{\mathsf{in}}+T)\times\mathbb T^2,\qquad \theta(t_{\mathsf{in}},\cdot)=\theta_{\mathsf{in}} \quad\text{on } \mathbb T^2,
 > ```
 >
 > satisfies
 >
 > ```math
-> \Vert\theta\Vert_{L^\infty([a+t_0,a+T];C^{0,s}(\mathbb T^2))}\le C\Vert f\Vert_{L^2(\mathbb T^2)}.
+> \Vert\theta\Vert_{L^\infty([t_{\mathsf{in}}+t_0,t_{\mathsf{in}}+T];C^{0,s}(\mathbb T^2))}\le C\Vert \theta_{\mathsf{in}}\Vert_{L^2(\mathbb T^2)}.
 > ```
 
 For the construction: `AVRegularity.interior_regularity_construction`, in
@@ -183,29 +183,29 @@ theorem interior_regularity (α s : ℝ) (hα₀ : 0 < α) (hα₁ : α < 1 / 3)
 
 > Let $\alpha$, $s$, $q$, $\zeta$ and $\Lambda_0$ be as in Theorem A, and let $\Lambda\ge\Lambda_0$ be
 > an integer. For the velocity field $\mathbf b$, there exists $c(\alpha,s,q,\zeta,\Lambda)\gt0$ such
-> that, for every $a\in\mathbb R$, $\kappa\in\mathcal K$ and $f\in L^2(\mathbb T^2)$, every weak
+> that, for every $t_{\mathsf{in}}\in\mathbb R$, $\kappa\in\mathcal K$ and $\theta_{\mathsf{in}}\in L^2(\mathbb T^2)$, every weak
 > solution $\theta$ of
 >
 > ```math
-> \partial_t\theta+\mathbf b\cdot\nabla\theta-\kappa\Delta\theta=0 \quad\text{in } (a,\infty)\times\mathbb T^2,\qquad \theta(a,\cdot)=f \quad\text{on } \mathbb T^2,
+> \partial_t\theta+\mathbf b\cdot\nabla\theta-\kappa\Delta\theta=0 \quad\text{in } (t_{\mathsf{in}},\infty)\times\mathbb T^2,\qquad \theta(t_{\mathsf{in}},\cdot)=\theta_{\mathsf{in}} \quad\text{on } \mathbb T^2,
 > ```
 >
 > satisfies
 >
 > ```math
-> \kappa\Vert\nabla\theta\Vert_{L^2((a,a+1)\times\mathbb T^2)}^2\ge c\,\bigl\Vert f-(f)_{\mathbb T^2}\bigr\Vert_{L^2(\mathbb T^2)}^2
+> \kappa\Vert\nabla\theta\Vert_{L^2((t_{\mathsf{in}},t_{\mathsf{in}}+1)\times\mathbb T^2)}^2\ge c\,\bigl\Vert \theta_{\mathsf{in}}-(\theta_{\mathsf{in}})_{\mathbb T^2}\bigr\Vert_{L^2(\mathbb T^2)}^2
 > ```
 >
-> and, for every $t\ge a$,
+> and, for every $t\ge t_{\mathsf{in}}$,
 >
 > ```math
-> \bigl\Vert\theta(t,\cdot)-(f)_{\mathbb T^2}\bigr\Vert_{L^2(\mathbb T^2)}\le2\exp(-c(t-a))\bigl\Vert f-(f)_{\mathbb T^2}\bigr\Vert_{L^2(\mathbb T^2)}.
+> \bigl\Vert\theta(t,\cdot)-(\theta_{\mathsf{in}})_{\mathbb T^2}\bigr\Vert_{L^2(\mathbb T^2)}\le2\exp(-c(t-t_{\mathsf{in}}))\bigl\Vert \theta_{\mathsf{in}}-(\theta_{\mathsf{in}})_{\mathbb T^2}\bigr\Vert_{L^2(\mathbb T^2)}.
 > ```
 
-Here $`(f)_{\mathbb T^2}`$ is the mean of $f$. Since the bands accumulate at $0$, it follows that,
-for every mean-zero $f\in L^2(\mathbb T^2)$, the weak solutions $\theta^\kappa$ with datum $f$ at
+Here $`(\theta_{\mathsf{in}})_{\mathbb T^2}`$ is the mean of $\theta_{\mathsf{in}}$. Since the bands accumulate at $0$, it follows that,
+for every mean-zero $\theta_{\mathsf{in}}\in L^2(\mathbb T^2)$, the weak solutions $\theta^\kappa$ with datum $\theta_{\mathsf{in}}$ at
 time $0$ satisfy
-$\liminf_{\kappa\to0,\ \kappa\in\mathcal K}\kappa\Vert\nabla\theta^\kappa\Vert_{L^2((0,1)\times\mathbb T^2)}^2\ge c\Vert f\Vert_{L^2(\mathbb T^2)}^2$.
+$\liminf_{\kappa\to0,\ \kappa\in\mathcal K}\kappa\Vert\nabla\theta^\kappa\Vert_{L^2((0,1)\times\mathbb T^2)}^2\ge c\Vert \theta_{\mathsf{in}}\Vert_{L^2(\mathbb T^2)}^2$.
 
 For the construction: `AVRegularity.uniform_anomalous_dissipation_construction`, in
 [UniformAnomalousDissipationConstruction.lean](AVRegularity/Statements/Main/UniformAnomalousDissipationConstruction.lean).
@@ -388,27 +388,27 @@ theorem local_interior_regularity (α s : ℝ) (hα₀ : 0 < α) (hα₁ : α < 
 > In the setting of Theorem A, with $\Lambda_0$ as there, let $\Lambda\ge\Lambda_0$ be an integer.
 >
 > (a) There exist constants $C(\alpha,s,q,\zeta,\Lambda,t_0,T)$, $0\lt t_0\lt T$, with the following
-> property. Let $a\in\mathbb R$, let $\mathcal K'\subset\mathcal K$ be an infinite subset with $0$ as its only
-> accumulation point, and, for $\kappa\in\mathcal K'$, let $f^\kappa\in L^2(\mathbb T^2)$ with
-> $\sup_{\kappa\in\mathcal K'}\Vert f^\kappa\Vert_{L^2(\mathbb T^2)}\lt\infty$, let $\theta^\kappa$ be
-> the weak solution on $(a,\infty)$ with datum $f^\kappa$ at time $a$, and, with $M$ such that
+> property. Let $t_{\mathsf{in}}\in\mathbb R$, let $\mathcal K'\subset\mathcal K$ be an infinite subset with $0$ as its only
+> accumulation point, and, for $\kappa\in\mathcal K'$, let $\theta_{\mathsf{in}}^\kappa\in L^2(\mathbb T^2)$ with
+> $\sup_{\kappa\in\mathcal K'}\Vert \theta_{\mathsf{in}}^\kappa\Vert_{L^2(\mathbb T^2)}\lt\infty$, let $\theta^\kappa$ be
+> the weak solution on $(t_{\mathsf{in}},\infty)$ with datum $\theta_{\mathsf{in}}^\kappa$ at time $t_{\mathsf{in}}$, and, with $M$ such that
 > $\kappa\in\mathcal K_M$, let $\widetilde\theta^\kappa$ be the weak solution of the same problem with
 > $\mathbf b_M$ in place of $\mathbf b$. Then every $\theta^\kappa$ is continuous on
-> $(a,\infty)\times\mathbb T^2$, and there exist an infinite subset $\mathcal K''\subset\mathcal K'$,
-> $f_\ast\in L^2(\mathbb T^2)$ and a continuous function $\theta_\ast$ on $(a,\infty)\times\mathbb T^2$
+> $(t_{\mathsf{in}},\infty)\times\mathbb T^2$, and there exist an infinite subset $\mathcal K''\subset\mathcal K'$,
+> $\theta_{\mathsf{in},\ast}\in L^2(\mathbb T^2)$ and a continuous function $\theta_\ast$ on $(t_{\mathsf{in}},\infty)\times\mathbb T^2$
 > such that:
 >
-> - (i) $f^\kappa\rightharpoonup f_\ast$ weakly in $L^2(\mathbb T^2)$, and $\theta^\kappa\to\theta_\ast$
->   locally uniformly on $(a,\infty)\times\mathbb T^2$, as $\kappa\to0$ in $\mathcal K''$;
+> - (i) $\theta_{\mathsf{in}}^\kappa\rightharpoonup \theta_{\mathsf{in},\ast}$ weakly in $L^2(\mathbb T^2)$, and $\theta^\kappa\to\theta_\ast$
+>   locally uniformly on $(t_{\mathsf{in}},\infty)\times\mathbb T^2$, as $\kappa\to0$ in $\mathcal K''$;
 > - (ii) $\partial_t\theta_\ast+\nabla\cdot(\mathbf b\theta_\ast)=0$ in the sense of distributions on
->   $(a,\infty)\times\mathbb R^2$, and $\theta_\ast(t,\cdot)\rightharpoonup f_\ast$ weakly in
->   $L^2(\mathbb T^2)$ as $t\downarrow a$;
+>   $(t_{\mathsf{in}},\infty)\times\mathbb R^2$, and $\theta_\ast(t,\cdot)\rightharpoonup \theta_{\mathsf{in},\ast}$ weakly in
+>   $L^2(\mathbb T^2)$ as $t\downarrow t_{\mathsf{in}}$;
 > - (iii) for every $0\lt t_0\lt T$,
->   $\Vert\theta_\ast\Vert_{L^\infty([a+t_0,a+T];C^{0,s}(\mathbb T^2))}\le C(t_0,T)\sup_{\kappa\in\mathcal K'}\Vert f^\kappa\Vert_{L^2(\mathbb T^2)}$,
->   and $\theta_\ast$ is Hölder continuous in time on $[a+t_0,a+T]\times\mathbb T^2$, uniformly in
+>   $\Vert\theta_\ast\Vert_{L^\infty([t_{\mathsf{in}}+t_0,t_{\mathsf{in}}+T];C^{0,s}(\mathbb T^2))}\le C(t_0,T)\sup_{\kappa\in\mathcal K'}\Vert \theta_{\mathsf{in}}^\kappa\Vert_{L^2(\mathbb T^2)}$,
+>   and $\theta_\ast$ is Hölder continuous in time on $[t_{\mathsf{in}}+t_0,t_{\mathsf{in}}+T]\times\mathbb T^2$, uniformly in
 >   space, with exponent $s/(1+s)$;
 > - (iv) $\theta^\kappa-\widetilde\theta^\kappa\to0$ in the sense of distributions on
->   $(a,\infty)\times\mathbb R^2$ as $\kappa\to0$ in $\mathcal K'$.
+>   $(t_{\mathsf{in}},\infty)\times\mathbb R^2$ as $\kappa\to0$ in $\mathcal K'$.
 >
 > (b) Let $C_1$, $m$, $r_{\mathrm{tube}}$, $t_{\mathrm f}$ and the tube $\mathcal T$ be as in
 > Theorem C, and let
@@ -550,6 +550,9 @@ theorem vanishing_diffusivity_limits_local (α s : ℝ) (hα₀ : 0 < α) (hα�
 </details>
 
 ### Reading the Lean statements
+
+In the Lean statements, the initial time and the initial datum are the binders `a` and `f`, the
+paper's $t_{\mathsf{in}}$ and $\theta_{\mathsf{in}}$.
 
 - **Space and the torus.** Space is `Vec 2 = Fin 2 → ℝ`. Functions on $\mathbb T^2$ are
   $\mathbb Z^2$-periodic functions on $\mathbb R^2$ (`IsZ2Periodic`), and integrals over
