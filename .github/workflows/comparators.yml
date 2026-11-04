@@ -13,18 +13,12 @@ name: Comparators
 # (`fail-on-cache-miss`). A manual run restores the most recent build cache of
 # the commit it runs on, so run "Build and verify" there first.
 #
-# Manual runs only: no CI runs until the repository is public. The triggers are
-# restored at release, when the repository is made public, by replacing the
-# `workflow_dispatch:` line below with
-#
-#   workflow_run:
-#     workflows: ["Build and verify"]
-#     types: [completed]
-#     branches: [main]
-#   workflow_dispatch:
-#
-# (and the push and pull-request triggers in build.yml, not here).
+# It also runs by hand.
 "on":
+  workflow_run:
+    workflows: ["Build and verify"]
+    types: [completed]
+    branches: [main]
   workflow_dispatch:
 
 permissions:

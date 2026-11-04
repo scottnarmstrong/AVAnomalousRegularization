@@ -1,18 +1,13 @@
 name: Build and verify
 
-# Manual runs only: no CI runs until the repository is public. The push
-# and pull-request triggers are restored at release, when the repository is made
-# public, by replacing the `workflow_dispatch:` line below with
-#
-#   push:
-#     branches: [main]
-#   pull_request:
-#     branches: [main]
-#   workflow_dispatch:
-#
-# Run this workflow first: the "Comparators" workflow starts when it succeeds
-# and restores the build cache that this run saves.
+# Runs on every push to main, on every pull request against main, and by hand.
+# The "Comparators" workflow starts when a run on main succeeds and restores
+# the build cache that this run saves.
 "on":
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
