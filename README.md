@@ -765,7 +765,7 @@ to about 24 GB of memory. On Ubuntu 24.04, `bubblewrap` also needs
 
 ## The paper and the correspondence table
 
-The paper ships as [doc/paper.pdf](doc/paper.pdf) (165 pages). Part I is a detailed outline of the
+The paper ships as [doc/paper.pdf](doc/paper.pdf) (164 pages). Part I is a detailed outline of the
 proof of Theorem A, which can be read on its own; Part II states the notions of Part I in full and
 proves every statement. The [correspondence table](doc/correspondence.md) lists, for every numbered
 statement and display of the paper, the Lean declarations that prove it, with their files, or why

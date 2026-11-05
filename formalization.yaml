@@ -49,7 +49,7 @@ sources:
       - "Scott Armstrong"
       - "Vlad Vicol"
     type: "article"
-    location: "doc/paper.pdf (165 pp.): Theorems A, B and C, Corollary D, and every numbered statement and display"
+    location: "doc/paper.pdf (164 pp.): Theorems A, B and C, Corollary D, and every numbered statement and display"
     relationship: "formalizes"
     note: >-
       The paper was written after the formalization and follows its
